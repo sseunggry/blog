@@ -1,7 +1,8 @@
 import {useState} from "react";
 
 export default function SwiperBanner(){
-    const url = '../../public/resource/images/content/';
+    // const url = '../../public/resource/images/content/';
+    const url = '/resource/images/content/';
     const imgList = ['banner_01.jpg', 'banner_02.jpg', 'banner_03.jpg'];
     
     const [activeSwiper, setActiveSwiper] = useState(0);
@@ -27,7 +28,6 @@ export default function SwiperBanner(){
                 <div className="swiper__wrapper" style={{transform: `translate(${activeSwiper * -100}%, 0)`}}>
                     {imgList.map((el, idx) => (
                         <div className="swiper__slide" key={idx}>
-                            <p>{idx}</p>
                             <img src={`${url}${el}`} alt=""/>
                         </div>
                     ))}

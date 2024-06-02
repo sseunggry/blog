@@ -1,20 +1,73 @@
 import {Link} from "react-router-dom";
+import {useState} from "react";
 
 interface PostListProps {
     hasNavigation? : boolean;
 }
 
+type TabType = "all" | "my" | "frontEnd" | "backend" | "web" | "native";
+
 export default function PostList({ hasNavigation = true } : PostListProps ){
+    const [activeTab, setActiveTab] = useState<TabType>('all');
+    
+    // const onClickTab = (e:any) => {
+    //     const target = e.target;
+    //     const liList = target.parentNode.querySelectorAll('li');
+    //
+    //     liList.each((el:any) => el.classList.remove('post__navigation-active'));
+    //     target.classList.add('post__navigation-active');
+    // }
+    
+    const tabList = {"전체" : "all", "나의 글" : "my", "Frontend" : "frontEnd", "Backend" : "backend", "Native" : "native"};
+    
     return (
         <section>
-            { hasNavigation && <ul className="post__navigation">
-                    <li className="post__navigation-active">전체</li>
-                    <li>나의 글</li>
-                    <li>Frontend</li>
-                    <li>Backend</li>
-                    <li>Web</li>
-                    <li>Native</li>
-                </ul> }
+            { hasNavigation && (
+                <ul className="post__navigation">
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('all')}
+                        className={activeTab === 'all' ? 'post__navigation-active' : ''}
+                    >
+                        전체
+                    </li>
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('my')}
+                        className={activeTab === 'my' ? 'post__navigation-active' : ''}
+                    >
+                        나의 글
+                    </li>
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('frontEnd')}
+                        className={activeTab === 'frontEnd' ? 'post__navigation-active' : ''}
+                    >
+                        Frontend
+                    </li>
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('backend')}
+                        className={activeTab === 'backend' ? 'post__navigation-active' : ''}
+                    >
+                        Backend
+                    </li>
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('web')}
+                        className={activeTab === 'web' ? 'post__navigation-active' : ''}
+                    >
+                        Web
+                    </li>
+                    <li
+                        role="presentation"
+                        onClick ={() => setActiveTab('native')}
+                        className={activeTab === 'native' ? 'post__navigation-active' : ''}
+                    >
+                        Native
+                    </li>
+                </ul>
+            )}
             <div className="post__list">
                 {[...Array(10)].map((el, idx) => (
                     <div key={idx} className="post__box">

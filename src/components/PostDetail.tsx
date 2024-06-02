@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export default function PostDetail(){
     return (
         <section className="post__detail">
@@ -9,7 +11,9 @@ export default function PostDetail(){
             </div>
             <div className="post__utils-box">
                 <button type="button" className="post__delete">삭제</button>
-                <button type="button" className="post__edit">수정</button>
+                <button type="button" className="post__edit">
+                    <Link to={`/posts/edit/1`}>수정</Link>
+                </button>
             </div>
             <div className="post__detail-text">
                 djWasldfjlasjdf lajsdfl jaslkfdj

@@ -1,7 +1,13 @@
+import Header from "components/Header";
+import LoginForm from "components/LoginForm";
+
 export default function LoginPage() {
     return (
         <>
-            <h1>Login</h1>
+            <Header />
+            <div className="contents">
+                <LoginForm />
+            </div>
         </>
     )
 }

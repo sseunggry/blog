@@ -1,7 +1,7 @@
 import Header from "components/Header";
 import Footer from "components/Footer";
 import PostList from "components/PostList";
-import SwiperBanner from "../../components/SwiperBanner";
+import SwiperBanner from "components/SwiperBanner";
 
 export default function Home(){
     return (
