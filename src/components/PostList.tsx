@@ -1,24 +1,88 @@
-import {Link} from "react-router-dom";
-import {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+
+import { collection, doc, getDocs, deleteDoc, query, orderBy, where } from "firebase/firestore";
+import { db } from "firebaseApp";
+import AuthContext from "context/AuthContext";
+import {toast} from "react-toastify";
 
 interface PostListProps {
     hasNavigation? : boolean;
+    defaultTab? : TabType;
+}
+export interface PostProps {
+    id?: string;
+    title: string;
+    summary: string;
+    content: string;
+    email: string;
+    createAt: string;
+    updateAt?: string;
+    uid: string;
+    category? : CategoryType;
 }
 
-type TabType = "all" | "my" | "frontEnd" | "backend" | "web" | "native";
+type TabType = "all" | "my" | "Frontend" | "Backend" | "Web" | "Native";
+export type CategoryType = "Frontend" | "Backend" | "Web" | "Native";
+export const CATEGORIES : CategoryType[] = ["Frontend", "Backend", "Web", "Native"];
 
-export default function PostList({ hasNavigation = true } : PostListProps ){
-    const [activeTab, setActiveTab] = useState<TabType>('all');
+export default function PostList({ hasNavigation = true, defaultTab = "all" } : PostListProps ){
+    const [activeTab, setActiveTab] = useState<TabType>(defaultTab);
+    const [posts, setPosts] = useState<PostProps[]>([]);
+    const { user } = useContext(AuthContext);
     
-    // const onClickTab = (e:any) => {
-    //     const target = e.target;
-    //     const liList = target.parentNode.querySelectorAll('li');
-    //
-    //     liList.each((el:any) => el.classList.remove('post__navigation-active'));
-    //     target.classList.add('post__navigation-active');
-    // }
+    const getPosts = async () => {
+        try {
+            //post 초기화
+            setPosts([]);
+            
+            //post 순서
+            let postsRef = collection(db, "posts");
+            let postsQuery;
+            
+            if(activeTab === "my" && user) {
+                //나의 글만 필터링
+                postsQuery = query(
+                    postsRef,
+                    where("uid", "==", user.uid),
+                    orderBy("createAt", "asc")
+                );
+            } else if (activeTab === "all"){
+                //모든 글 보여주기
+                postsQuery = query(postsRef, orderBy("createAt", "asc"));
+            }
+            else {
+                //카테고리 글 보여주기
+                postsQuery = query(
+                    postsRef,
+                    where("category", "==", activeTab),
+                    orderBy("createAt", "asc")
+                );
+            }
+            
+            const datas = await getDocs(postsQuery);
+            datas?.forEach((doc) => {
+                const dataObj = { id: doc.id, ...doc.data() };
+                setPosts((prev) => [...prev, dataObj as PostProps]);
+            })
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    const handleDelete = async (id: string) => {
+        const confirm = window.confirm("해당 게시글을 삭제하시겠습니까?");
+        
+        if(confirm && id) {
+            await deleteDoc(doc(db, "posts", id));
+            toast.success("게시글을 삭제했습니다.");
+            
+            getPosts(); //변경된 post 리스트를 다시 가져옴
+        }
+    }
     
-    const tabList = {"전체" : "all", "나의 글" : "my", "Frontend" : "frontEnd", "Backend" : "backend", "Native" : "native"};
+    useEffect(() => {
+        getPosts();
+    }, [activeTab]);
     
     return (
         <section>
@@ -26,68 +90,56 @@ export default function PostList({ hasNavigation = true } : PostListProps ){
                 <ul className="post__navigation">
                     <li
                         role="presentation"
-                        onClick ={() => setActiveTab('all')}
-                        className={activeTab === 'all' ? 'post__navigation-active' : ''}
+                        onClick={() => setActiveTab("all")}
+                        className={activeTab === 'all' ? 'post__navigation-active' : ""}
                     >
                         전체
                     </li>
                     <li
                         role="presentation"
-                        onClick ={() => setActiveTab('my')}
-                        className={activeTab === 'my' ? 'post__navigation-active' : ''}
+                        onClick={() => setActiveTab("my")}
+                        className={activeTab === 'my' ? 'post__navigation-active' : ""}
                     >
                         나의 글
                     </li>
-                    <li
-                        role="presentation"
-                        onClick ={() => setActiveTab('frontEnd')}
-                        className={activeTab === 'frontEnd' ? 'post__navigation-active' : ''}
-                    >
-                        Frontend
-                    </li>
-                    <li
-                        role="presentation"
-                        onClick ={() => setActiveTab('backend')}
-                        className={activeTab === 'backend' ? 'post__navigation-active' : ''}
-                    >
-                        Backend
-                    </li>
-                    <li
-                        role="presentation"
-                        onClick ={() => setActiveTab('web')}
-                        className={activeTab === 'web' ? 'post__navigation-active' : ''}
-                    >
-                        Web
-                    </li>
-                    <li
-                        role="presentation"
-                        onClick ={() => setActiveTab('native')}
-                        className={activeTab === 'native' ? 'post__navigation-active' : ''}
-                    >
-                        Native
-                    </li>
+                    {CATEGORIES?.map((category) => (
+                        <li
+                            key={category}
+                            role="presentation"
+                            onClick={() => setActiveTab(category)}
+                            className={activeTab === category ? 'post__navigation-active' : ""}
+                        >
+                            {category}
+                        </li>
+                    ))}
                 </ul>
             )}
             <div className="post__list">
-                {[...Array(10)].map((el, idx) => (
-                    <div key={idx} className="post__box">
-                        <Link to={`/posts/${idx}`}>
+                {posts?.length > 0 ? (
+                    posts?.map((post) => (
+                    <div key={post?.id} className="post__box">
+                        <Link to={`/posts/${post?.id}`}>
                             <div className="post__profile-box">
                                 <div className="post__profile" />
-                                <div className="post__author-name">sseunggry</div>
-                                <div className="post__date">2024.06.01 토요일</div>
+                                <div className="post__author-name">{post?.email}</div>
+                                <div className="post__date">{post?.createAt}</div>
                             </div>
-                            <p className="post__title">게시글 {idx}</p>
-                            <p className="post__text">
-                                djWasldfjlasjdf lajsdfl jaslkfdj
-                            </p>
+                            <p className="post__title">{post?.title}</p>
+                            <p className="post__text">{post?.summary}</p>
                         </Link>
-                        <div className="post__utils-box">
-                            <button type="button" className="post__delete">삭제</button>
-                            <button type="button" className="post__edit">수정</button>
-                        </div>
+                        {post?.email === user?.email && (
+                            <div className="post__utils-box">
+                                <div className="btn post__delete" role="presentation" onClick={() => handleDelete(post?.id as string)}>삭제</div>
+                                <div className="btn post__edit">
+                                    <Link to={`/posts/edit/${post?.id}`} >수정</Link>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                ))}
+                ))
+                ) : (
+                    <div className="post__no-post">게시글이 없습니다.</div>
+                )}
             </div>
         </section>
     )

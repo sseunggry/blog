@@ -9,7 +9,7 @@ export default function ProfilePage(){
             <Header />
             <div className="contents">
                 <ProFile />
-                <PostList hasNavigation={false} />
+                <PostList hasNavigation={false} defaultTab={"my"} />
             </div>
             <Footer />
         </>

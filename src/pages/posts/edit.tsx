@@ -7,7 +7,7 @@ export default function PostEdit() {
         <>
             <Header />
             <div className="contents">
-                <PostForm btnName={"수정"} />
+                <PostForm />
             </div>
             <Footer />
         </>
