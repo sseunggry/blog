@@ -5,16 +5,108 @@
 $fonts-ko: (Thin:100, Light:300, DemiLight: 350, Regular: 400, Medium: 500, Bold: 700, Black: 900);
 $fonts-en: (Thin:100, Light:300, Regular: 400, Medium: 500, Bold: 700, Black: 900);
 
-@each $font, $weight in $fonts-ko{
-  @font-face{
-    @include font('Noto Sans KR', 'NotoSansKR-#{$font}', 'woff2', #{$weight});
-    font-style: normal;
-  }
+//@each $font, $weight in $fonts-ko{
+//  @font-face{
+//    @include font('Noto Sans KR', 'NotoSansKR-#{$font}', 'woff2', #{$weight});
+//    font-style: normal;
+//  }
+//}
+
+//@each $font, $weight in $fonts-en{
+//  @font-face{
+//    @include font('Roboto', 'Roboto-#{$font}', 'ttf', #{$weight});
+//    font-style: normal;
+//  }
+//}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../../../public/resource/font/NotoSansKR-Thin.woff") format("woff");
 }
 
-@each $font, $weight in $fonts-en{
-  @font-face{
-    @include font('Roboto', 'Roboto-#{$font}', 'ttf', #{$weight});
-    font-style: normal;
-  }
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../../../public/resource/font/NotoSansKR-Light.woff") format("woff");
 }
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 350;
+  src: url("../../../public/resource/font/NotoSansKR-DemiLight.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../public/resource/font/NotoSansKR-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../../../public/resource/font/NotoSansKR-Medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../../public/resource/font/NotoSansKR-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../../../public/resource/font/NotoSansKR-Black.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../../../public/resource/font/Roboto-Thin.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../../../public/resource/font/Roboto-Light.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../public/resource/font/Roboto-Regular.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../../../public/resource/font/Roboto-Medium.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../../public/resource/font/Roboto-Bold.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../../../public/resource/font/Roboto-Black.ttf") format("ttf");
+}
+
