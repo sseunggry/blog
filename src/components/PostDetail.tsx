@@ -6,6 +6,7 @@ import {PostProps} from "components/PostList";
 import Loader from "./Loader";
 import {toast} from "react-toastify";
 import AuthContext from "../context/AuthContext";
+import Comments from "./Comments";
 
 export default function PostDetail(){
     const params = useParams();
@@ -42,27 +43,29 @@ export default function PostDetail(){
             {post ? (
                 <>
                     <section className="post__detail">
-                        <h2 className="post__detail-title">{post?.title}</h2>
-                        <div className="post__profile-box">
-                            <div className="post__profile" />
-                            <div className="post__author-name">{post?.email}</div>
-                            <div className="post__date">{post?.createAt}</div>
-                        </div>
-                        <div className="post__flex-box">
-                            <p className="post__category">{post?.category}</p>
-                            {post?.email === user?.email && (
-                                <div className="post__utils-box">
-                                    <div className="btn post__delete" role="presentation" onClick={handleDelete}>삭제</div>
-                                    <div className="btn post__edit">
-                                        <Link to={`/posts/edit/${post?.id}`} >수정</Link>
+                        <div className="post__detail-box">
+                            <h2 className="post__detail-title">{post?.title}</h2>
+                            <div className="post__profile-box">
+                                <div className="post__profile" />
+                                <div className="post__author-name">{post?.email}</div>
+                                <div className="post__date">{post?.createAt}</div>
+                            </div>
+                            <div className="post__flex-box">
+                                {post?.category && <p className="post__category">{post?.category}</p> }
+                                {post?.email === user?.email && (
+                                    <div className="post__utils-box">
+                                        <div className="btn post__delete" role="presentation" onClick={handleDelete}>삭제</div>
+                                        <div className="btn post__edit">
+                                            <Link to={`/posts/edit/${post?.id}`} >수정</Link>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                            )}
+                                )}
+                            </div>
+                            <div className="post__detail-text post__text--pre-wrap">
+                                {post?.content}
+                            </div>
                         </div>
-                        <div className="post__detail-text post__text--pre-wrap">
-                            {post?.content}
-                        </div>
+                        <Comments post={post} getPost={getPost}/>
                     </section>
                     <Link to="/" className="page__btn page__btn--fixed">목록으로</Link>
                 </>
